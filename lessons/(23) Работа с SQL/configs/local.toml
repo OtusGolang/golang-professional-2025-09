@@ -1,0 +1,4 @@
+[psql]
+dsn = "host=localhost port=5432 user=otus_user password=otus_password dbname=books sslmode=disable"
+migration = "migrations"
+
