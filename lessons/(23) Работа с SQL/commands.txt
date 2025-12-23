@@ -1,0 +1,38 @@
+# Запускам
+docker run -d --name pg -e POSTGRES_PASSWORD=postgres -e PGDATA=/var/lib/postgresql/data/pgdata -v pg_data:/var/lib/postgresql/data -p 5432:5432 postgres:14
+
+# Заходим в CLI
+docker exec -it pg psql -Upostgres -dpostgres
+
+# Создаем себе пользователя и БД
+postgres=# create database books;
+postgres=# create user otus_user with encrypted password 'otus_password';
+postgres=# grant all privileges on database books to otus_user;
+
+# Проверяем
+docker exec -it pg psql -Uotus_user -dbooks
+
+# Создаем миграции
+go install github.com/pressly/goose/v3/cmd/goose@latest
+
+goose -dir migrations create init sql
+
+# Применяем миграции и проверяем
+goose -dir migrations postgres "host=localhost port=5432 user=otus_user password=otus_password dbname=books sslmode=disable" up
+
+goose -dir migrations postgres "host=localhost port=5432 user=otus_user password=otus_password dbname=books sslmode=disable" status
+
+goose -dir migrations postgres "host=localhost port=5432 user=otus_user password=otus_password dbname=books sslmode=disable" reset
+
+goose -dir migrations postgres "host=localhost port=5432 user=otus_user password=otus_password dbname=books sslmode=disable" down
+
+goose -dir migrations postgres "host=localhost port=5432 user=otus_user password=otus_password dbname=books sslmode=disable" down-to 001
+
+docker exec pg psql -Uotus_user -dbooks -c "\dt"
+docker exec pg psql -Uotus_user -dbooks -c "select * from books";
+
+# Полезное
+https://github.com/BurntSushi/toml
+https://github.com/jackc/pgx
+http://go-database-sql.org/errors.html
+https://github.com/golang/go/issues/24329#issuecomment-373145906
