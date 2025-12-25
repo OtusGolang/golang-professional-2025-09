@@ -1,0 +1,46 @@
+services:
+  mongodb:
+    image: mongo:latest
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+
+  redis:
+    image: redis:latest
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+
+  valkey:
+    image: valkey/valkey:latest
+    ports:
+      - "6380:6379"
+    volumes:
+      - valkey_data:/data
+
+  clickhouse:
+    image: clickhouse/clickhouse-server
+    environment:
+      CLICKHOUSE_USER: otus
+      CLICKHOUSE_PASSWORD: otus
+    ports:
+      - "18123:8123"
+      - "19000:9000"
+    volumes:
+      - clickhouse_data:/var/lib/clickhouse
+
+  aerospike:
+    image: aerospike/aerospike-server:latest
+    ports:
+      - "3000:3000"
+    volumes:
+      - aerospike_data:/opt/aerospike/data
+
+volumes:
+  mongodb_data:
+  redis_data:
+  valkey_data:
+  clickhouse_data:
+  aerospike_data:
