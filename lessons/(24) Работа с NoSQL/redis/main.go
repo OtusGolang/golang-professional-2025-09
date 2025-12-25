@@ -12,7 +12,7 @@ func main() {
 
 	// Создание клиента Redis
 	client := redis.NewClient(&redis.Options{
-		Addr:     "localhost:6379", // Адрес и порт Redis-сервера
+		Addr:     "localhost:6380", // Адрес и порт Redis-сервера
 		Password: "",               // Пароль (если есть)
 		DB:       0,                // Номер базы данных
 	})
